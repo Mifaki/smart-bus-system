@@ -1,3 +1,5 @@
+'use cient'
+
 import { IMotionData } from "@/shared/models/motioninterfaces";
 import { useEffect, useRef, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
@@ -86,7 +88,7 @@ const DynamicMap = ({
     }, [motionData, map]);
 
     const icon = new Icon({
-        iconUrl: '@/assets/marker-icon.png',
+        iconUrl: '/marker-icon.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
@@ -109,7 +111,7 @@ const DynamicMap = ({
                             <p>Gyro Y: {motionData.gyroscope.y.toFixed(2)}°/s</p>
                             <p>Gyro Z: {motionData.gyroscope.z.toFixed(2)}°/s</p>
                             <p>Movement: {isMoving ? 'Smooth' : 'Instant'}</p>
-                            <p>Last Update: {new Date(motionData.timestamp || Date.now()).toLocaleString()}</p>
+                            <p>Last Update: {new Date(motionData.timestamp ?? Date.now()).toLocaleString()}</p>
                         </>
                     )}
                 </div>

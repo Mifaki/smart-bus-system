@@ -1,18 +1,22 @@
 'use client'
-
 import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
+import dynamic from 'next/dynamic'
 import { IMotionData } from '@/shared/models/motioninterfaces'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/container/card'
-import DynamicMap from '../dynamic-map/DynamicMap'
+
+const Map = dynamic(
+  () => import('./Map'), 
+  { 
+    ssr: false,
+    loading: () => <div className="w-full h-[500px] rounded-lg overflow-hidden shadow-lg bg-gray-100 animate-pulse" />
+  }
+)
 
 const DEFAULT_POSITION = { lat: -7.9797, lng: 112.6304 };
 const SENSITIVITY = 0.0001;
 
 export function MapDisplay() {
     const [motionData, setMotionData] = useState<IMotionData | null>(null);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,39 +25,23 @@ export function MapDisplay() {
                 if (!response.ok) throw new Error('Failed to fetch data');
                 const data = await response.json();
                 setMotionData(data);
-                setError(null);
             } catch (err) {
-                setError('Error fetching motion data');
                 console.error(err);
             }
         };
 
         fetchData();
         const interval = setInterval(fetchData, 1000);
-
         return () => clearInterval(interval);
     }, []);
 
     return (
         <div className="grid grid-cols-1 gap-6">
-            <div className="w-full h-[500px] rounded-lg overflow-hidden shadow-lg">
-                <MapContainer
-                    center={motionData?.position || DEFAULT_POSITION}
-                    zoom={18}
-                    style={{ height: '100%', width: '100%' }}
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <DynamicMap
-                        motionData={motionData}
-                        defaultPosition={DEFAULT_POSITION}
-                        defaultSensitivity={SENSITIVITY}
-                    />
-                </MapContainer>
-            </div>
-
+            <Map 
+                motionData={motionData}
+                defaultPosition={DEFAULT_POSITION}
+                defaultSensitivity={SENSITIVITY}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                     <CardHeader>
@@ -72,7 +60,6 @@ export function MapDisplay() {
                         )}
                     </CardContent>
                 </Card>
-
                 <Card>
                     <CardHeader>
                         <CardTitle>Last Update</CardTitle>
