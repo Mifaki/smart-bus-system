@@ -1,12 +1,13 @@
 'use client'
+
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { IMotionData } from '@/shared/models/motioninterfaces'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/container/card'
+import { IMotionData } from '@/shared/models/motioninterfaces'
 
 const Map = dynamic(
-  () => import('./Map'), 
-  { 
+  () => import('./Map'),
+  {
     ssr: false,
     loading: () => <div className="w-full h-[500px] rounded-lg overflow-hidden shadow-lg bg-gray-100 animate-pulse" />
   }
@@ -29,7 +30,6 @@ export function MapDisplay() {
                 console.error(err);
             }
         };
-
         fetchData();
         const interval = setInterval(fetchData, 1000);
         return () => clearInterval(interval);
@@ -37,7 +37,7 @@ export function MapDisplay() {
 
     return (
         <div className="grid grid-cols-1 gap-6">
-            <Map 
+            <Map
                 motionData={motionData}
                 defaultPosition={DEFAULT_POSITION}
                 defaultSensitivity={SENSITIVITY}
@@ -52,8 +52,6 @@ export function MapDisplay() {
                             <div className="space-y-2">
                                 <p>Latitude: {motionData.position.lat.toFixed(6)}°</p>
                                 <p>Longitude: {motionData.position.lng.toFixed(6)}°</p>
-                                <p>Acceleration X: {motionData.accelerometer.x.toFixed(2)} g</p>
-                                <p>Acceleration Y: {motionData.accelerometer.y.toFixed(2)} g</p>
                             </div>
                         ) : (
                             <p>Loading...</p>

@@ -1,7 +1,8 @@
 'use client'
-import { MapContainer, TileLayer } from 'react-leaflet'
+
 import 'leaflet/dist/leaflet.css'
-import { IMotionData } from '@/shared/models/motioninterfaces'
+import { IMotionData } from '@/shared/models/motioninterfaces';
+import { MapContainer, TileLayer } from 'react-leaflet'
 import DynamicMap from '../dynamic-map/DynamicMap'
 
 interface MapProps {
